@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from config import VERSION
 app = Flask(__name__)
 
@@ -13,6 +13,10 @@ def version():
 @app.route('/health')
 def health():
     return jsonify(status='ok', version=VERSION)
+
+@app.route('/echo', methods=['POST'])
+def echo():
+    return jsonify(request.get_json() or {})
 
 if __name__ == '__main__':
     app.run()
