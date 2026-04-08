@@ -1,0 +1,1 @@
+2026-04-08: Added health endpoint with version info and jsonify import.
