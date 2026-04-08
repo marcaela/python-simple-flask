@@ -6,6 +6,10 @@ app = Flask(__name__)
 def home():
     return "Hello, World!"
 
+@app.route('/version')
+def version():
+    return jsonify(version=VERSION)
+
 @app.route('/health')
 def health():
     return jsonify(status='ok', version=VERSION)
