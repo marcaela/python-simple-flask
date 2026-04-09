@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from datetime import datetime, timezone
 from config import VERSION
 app = Flask(__name__)
 
@@ -12,7 +13,16 @@ def version():
 
 @app.route('/health')
 def health():
-    return jsonify(status='ok', version=VERSION)
+    return jsonify(status='ok', version=VERSION, timestamp=datetime.now(timezone.utc).isoformat())
+
+@app.route('/status')
+def status():
+    return jsonify(
+        version=VERSION,
+        endpoint=request.path,
+        method=request.method,
+        timestamp=datetime.now(timezone.utc).isoformat()
+    )
 
 @app.route('/echo', methods=['POST'])
 def echo():

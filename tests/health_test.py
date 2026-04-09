@@ -8,6 +8,19 @@ def test_health_endpoint():
     data = response.get_json()
     assert data['status'] == 'ok'
     assert 'version' in data
+    assert 'timestamp' in data
+
+
+def test_status_endpoint():
+    client = app.test_client()
+    response = client.get('/status')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'version' in data
+    assert 'endpoint' in data
+    assert data['endpoint'] == '/status'
+    assert 'method' in data
+    assert 'timestamp' in data
 
 
 def test_version_endpoint():
