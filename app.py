@@ -16,7 +16,13 @@ def health():
 
 @app.route('/echo', methods=['POST'])
 def echo():
-    return jsonify(request.get_json() or {})
+    try:
+        data = request.get_json()
+        if data is None:
+            return jsonify(error="Invalid JSON"), 400
+        return jsonify(data)
+    except Exception as e:
+        return jsonify(error=str(e)), 400
 
 if __name__ == '__main__':
     app.run()
