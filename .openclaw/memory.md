@@ -1,2 +1,4 @@
-2026-04-08: Added health endpoint with version info and jsonify import.
-2026-04-09: Implemented that endpoint, added tests, requirements.txt, and improved README.
+# Memory
+
+## 2025-04-09
+- Fixed /echo endpoint to handle invalid JSON and exceptions properly
