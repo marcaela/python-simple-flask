@@ -45,3 +45,15 @@ def test_echo_empty():
     response = client.post('/echo', content_type='application/json')
     # Without body, returns empty dict (or 400 depending on Flask version)
     assert response.status_code in (200, 400)
+
+
+def test_request_id_generated():
+    client = app.test_client()
+    response = client.get('/version')
+    assert response.status_code == 200
+    # Request ID should be generated automatically
+    data = response.get_json()
+    # version endpoint doesn't include request_id, but next requests should have it
+    response2 = client.get('/status')
+    data2 = response2.get_json()
+    assert 'request_id' in data2

@@ -1,7 +1,12 @@
 from flask import Flask, jsonify, request
 from datetime import datetime, timezone
 from config import VERSION
+import uuid
 app = Flask(__name__)
+
+@app.before_request
+def add_request_id():
+    request.id = request.headers.get('X-Request-ID', str(uuid.uuid4())[:8])
 
 @app.route('/')
 def home():
@@ -18,6 +23,7 @@ def health():
 @app.route('/status')
 def status():
     return jsonify(
+        request_id=request.id,
         version=VERSION,
         endpoint=request.path,
         method=request.method,
@@ -30,7 +36,7 @@ def echo():
         data = request.get_json()
         if data is None:
             return jsonify(error="Invalid JSON"), 400
-        return jsonify(data)
+        return jsonify(request_id=request.id, **data)
     except Exception as e:
         return jsonify(error=str(e)), 400
 
