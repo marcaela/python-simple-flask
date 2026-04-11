@@ -1,4 +1,6 @@
-# python-simple-flask
+# Simple Flask App
+
+A minimal Flask application exposing health, version, status, and echo endpoints.
 
 A minimal Flask application with a health check endpoint.
 
