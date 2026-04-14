@@ -29,7 +29,7 @@ def test_version_endpoint():
     assert response.status_code == 200
     data = response.get_json()
     assert 'version' in data
-    assert data['version'] == "1.0.0"
+    assert data['version'] == "v0.2.1"
 
 
 def test_echo_endpoint():
