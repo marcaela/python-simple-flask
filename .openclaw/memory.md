@@ -5,3 +5,6 @@
 
 ## 2025-04-16
 - Added test for /version endpoint (tests/version_test.py), 2 tests pass.
+
+## 2025-04-17
+- Added tests for /echo endpoint (tests/echo_test.py), 3 tests pass.
