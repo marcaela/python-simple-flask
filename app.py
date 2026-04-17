@@ -44,5 +44,13 @@ def echo():
 def ping():
     return "Pong!", 200
 
+@app.route('/time')
+def get_time():
+    """Return current server time in ISO format."""
+    return jsonify(
+        timezone='UTC',
+        timestamp=datetime.now(timezone.utc).isoformat()
+    )
+
 if __name__ == '__main__':
     app.run()
