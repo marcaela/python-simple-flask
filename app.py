@@ -1,12 +1,21 @@
+import logging
 from flask import Flask, jsonify, request
 from datetime import datetime, timezone
 from config import VERSION
 import uuid
+
 app = Flask(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 @app.before_request
 def add_request_id():
     request.id = request.headers.get('X-Request-ID', str(uuid.uuid4())[:8])
+
+@app.after_request
+def log_request(response):
+    logger.info(f"{request.method} {request.path} - {response.status_code} - {request.id}")
+    return response
 
 @app.route('/')
 def home():
