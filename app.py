@@ -1,6 +1,6 @@
 import logging
 from flask import Flask, jsonify, request
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from config import VERSION
 import uuid
 
@@ -56,10 +56,20 @@ def ping():
 @app.route('/time')
 def get_time():
     """Return current server time in ISO format."""
-    return jsonify(
-        timezone='UTC',
-        timestamp=datetime.now(timezone.utc).isoformat()
-    )
+    tz_name = request.args.get('tz', 'UTC')
+    try:
+        if tz_name != 'UTC':
+            offset = int(request.args.get('offset', 0))
+            td = timedelta(hours=offset)
+            now = datetime.now(timezone.utc) + td
+        else:
+            now = datetime.now(timezone.utc)
+        return jsonify(
+            timezone=tz_name,
+            timestamp=now.isoformat()
+        )
+    except ValueError:
+        return jsonify(error="Invalid timezone parameter"), 400
 
 if __name__ == '__main__':
     app.run()
