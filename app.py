@@ -49,6 +49,11 @@ def echo():
     except Exception as e:
         return jsonify(error=str(e)), 400
 
+@app.route('/headers')
+def headers():
+    """Return request headers (useful for debugging)."""
+    return jsonify(dict(request.headers))
+
 @app.route('/ping')
 def ping():
     return "Pong!", 200
