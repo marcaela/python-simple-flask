@@ -23,7 +23,7 @@ def home():
 
 @app.route('/version')
 def version():
-    return jsonify(version=VERSION)
+    return jsonify(app=APP_NAME, version=VERSION)
 
 @app.route('/health')
 def health():

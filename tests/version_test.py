@@ -12,3 +12,9 @@ def test_version_format():
     client = app.test_client()
     response = client.get('/version')
     assert b'v0' in response.data
+
+def test_version_returns_app():
+    client = app.test_client()
+    response = client.get('/version')
+    data = response.get_json()
+    assert data['app'] == "python-simple-flask"
