@@ -1,7 +1,7 @@
 import logging
 from flask import Flask, jsonify, request
 from datetime import datetime, timezone, timedelta
-from config import VERSION
+from config import APP_NAME, VERSION
 import uuid
 
 app = Flask(__name__)
@@ -27,11 +27,12 @@ def version():
 
 @app.route('/health')
 def health():
-    return jsonify(status='ok', version=VERSION, timestamp=datetime.now(timezone.utc).isoformat())
+    return jsonify(app=APP_NAME, status='ok', version=VERSION, timestamp=datetime.now(timezone.utc).isoformat())
 
 @app.route('/status')
 def status():
     return jsonify(
+        app=APP_NAME,
         request_id=request.id,
         version=VERSION,
         endpoint=request.path,

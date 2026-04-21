@@ -7,6 +7,8 @@ def test_health_endpoint():
     assert response.status_code == 200
     data = response.get_json()
     assert data['status'] == 'ok'
+    assert 'app' in data
+    assert data['app'] == 'python-simple-flask'
     assert 'version' in data
     assert 'timestamp' in data
 
@@ -30,6 +32,7 @@ def test_version_endpoint():
     data = response.get_json()
     assert 'version' in data
     assert data['version'] == "v0.2.1"
+    assert 'app' in data
 
 
 def test_echo_endpoint():
