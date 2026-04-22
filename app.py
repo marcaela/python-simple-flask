@@ -4,6 +4,33 @@ from flask import Flask, jsonify, request
 from datetime import datetime, timezone, timedelta
 from config import APP_NAME, VERSION
 import uuid
+from functools import wraps
+
+# Simple in-memory rate limiter
+rate_limit_store = {}
+
+def rate_limit(max_requests=10, window_seconds=60):
+    """Simple rate limiting decorator."""
+    def decorator(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            client_ip = request.remote_addr
+            key = f"{client_ip}:{request.endpoint}"
+            now = time.time()
+            
+            if key not in rate_limit_store:
+                rate_limit_store[key] = []
+            
+            # Clean old requests
+            rate_limit_store[key] = [t for t in rate_limit_store[key] if now - t < window_seconds]
+            
+            if len(rate_limit_store[key]) >= max_requests:
+                return jsonify(error="Rate limit exceeded"), 429
+            
+            rate_limit_store[key].append(now)
+            return f(*args, **kwargs)
+        return wrapped
+    return decorator
 
 # Simple in-memory metrics
 metrics = {
@@ -61,6 +88,7 @@ def status():
     )
 
 @app.route('/echo', methods=['POST'])
+@rate_limit(max_requests=5, window_seconds=60)
 def echo():
     try:
         data = request.get_json()
