@@ -19,6 +19,7 @@ python app.py
 | `/status`  | GET    | Returns request details         |
 | `/echo`    | POST   | Echoes back JSON payload        |
 | `/ping`    | GET    | Returns "Pong!"                 |
+| `/headers` | GET    | Returns request headers (debugging) |
 | `/time`    | GET    | Returns current UTC time        |
 
 ## Testing
