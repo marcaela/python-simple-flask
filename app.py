@@ -42,6 +42,15 @@ metrics = {
 }
 
 app = Flask(__name__)
+
+# JSON error handlers
+@app.errorhandler(404)
+def not_found(e):
+    return jsonify(error="Not found"), 404
+
+@app.errorhandler(405)
+def method_not_allowed(e):
+    return jsonify(error="Method not allowed"), 405
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
