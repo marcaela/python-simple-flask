@@ -120,19 +120,22 @@ def ping():
 def get_time():
     """Return current server time in ISO format."""
     tz_name = request.args.get('tz', 'UTC')
-    try:
-        if tz_name != 'UTC':
-            offset = int(request.args.get('offset', 0))
-            td = timedelta(hours=offset)
-            now = datetime.now(timezone.utc) + td
-        else:
-            now = datetime.now(timezone.utc)
-        return jsonify(
-            timezone=tz_name,
-            timestamp=now.isoformat()
-        )
-    except ValueError:
-        return jsonify(error="Invalid timezone parameter"), 400
+    if tz_name != 'UTC':
+        offset_str = request.args.get('offset')
+        if offset_str is None:
+            return jsonify(error="Missing offset parameter"), 400
+        try:
+            offset = int(offset_str)
+        except ValueError:
+            return jsonify(error="Invalid offset parameter"), 400
+        td = timedelta(hours=offset)
+        now = datetime.now(timezone.utc) + td
+    else:
+        now = datetime.now(timezone.utc)
+    return jsonify(
+        timezone=tz_name,
+        timestamp=now.isoformat()
+    )
 
 @app.route('/metrics')
 def get_metrics():
