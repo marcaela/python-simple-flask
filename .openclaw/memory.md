@@ -10,3 +10,5 @@
 - 2025-04-27: Added uptime_seconds to /metrics endpoint (feature/test)2026-04-27: Improved test coverage for /time endpoint (test improvement)
 - 2026-04-26: Improved /time endpoint with better error handling for offset parameter (feature/test)
 2026-04-27: Improved test coverage for /time endpoint (test improvement)
+- 2026-04-27: Added uptime_seconds to /health endpoint and update test
+Task completed: Added uptime_seconds to /health endpoint and updated corresponding test.
