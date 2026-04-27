@@ -83,7 +83,16 @@ def version():
 
 @app.route('/health')
 def health():
-    return jsonify(app=APP_NAME, status='ok', version=VERSION, timestamp=datetime.now(timezone.utc).isoformat())
+    start_time = datetime.fromisoformat(metrics['start_time'])
+    now = datetime.now(timezone.utc)
+    uptime_seconds = round((now - start_time).total_seconds(), 2)
+    return jsonify(
+        app=APP_NAME,
+        status='ok',
+        version=VERSION,
+        timestamp=datetime.now(timezone.utc).isoformat(),
+        uptime_seconds=uptime_seconds
+    )
 
 @app.route('/status')
 def status():

@@ -11,6 +11,8 @@ def test_health_endpoint():
     assert data['app'] == 'python-simple-flask'
     assert 'version' in data
     assert 'timestamp' in data
+    assert 'uptime_seconds' in data
+    assert isinstance(data['uptime_seconds'], (int, float))
 
 
 def test_status_endpoint():
