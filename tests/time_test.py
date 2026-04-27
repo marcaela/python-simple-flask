@@ -13,7 +13,7 @@ def test_time_endpoint():
     assert 'timestamp' in data
     assert data['timezone'] == 'UTC'
 
-def test_time_endpoint_with_offset():
+def test_time_endpoint_with_offset_non_utc():
     client = app.test_client()
     # Test with positive offset and non-UTC tz
     response = client.get('/time?tz=TEST&offset=2')
@@ -31,7 +31,7 @@ def test_time_endpoint_with_offset():
     assert 'timestamp' in data
     assert data['timezone'] == 'TEST'
 
-def test_time_endpoint_with_utc_offset():
+def test_time_endpoint_with_offset_utc():
     client = app.test_client()
     # Test with positive offset
     response = client.get('/time?tz=UTC&offset=2')
@@ -46,21 +46,23 @@ def test_time_endpoint_with_utc_offset():
     assert response.status_code == 200
     data = response.get_json()
     assert 'timezone' in data
+    assert 'timestamp' in data
     assert data['timezone'] == 'UTC'
 
-def test_time_endpoint_with_offset():
+def test_time_endpoint_with_offset_missing():
     client = app.test_client()
-    # Test with positive offset
-    response = client.get('/time?tz=UTC&offset=2')
-    assert response.status_code == 200
+    # Test missing offset when tz is not UTC
+    response = client.get('/time?tz=TEST')
+    assert response.status_code == 400
     data = response.get_json()
-    assert 'timezone' in data
-    assert 'timestamp' in data
-    assert data['timezone'] == 'UTC'
-    
-    # Test with negative offset
-    response = client.get('/time?tz=UTC&offset=-5')
-    assert response.status_code == 200
+    assert 'error' in data
+    assert data['error'] == 'Missing offset parameter'
+
+def test_time_endpoint_with_offset_invalid():
+    client = app.test_client()
+    # Test invalid offset parameter
+    response = client.get('/time?tz=TEST&offset=abc')
+    assert response.status_code == 400
     data = response.get_json()
-    assert 'timezone' in data
-    assert data['timezone'] == 'UTC'
+    assert 'error' in data
+    assert data['error'] == 'Invalid offset parameter'
