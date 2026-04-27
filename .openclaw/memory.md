@@ -8,3 +8,4 @@
 - 2025-04-23: Added offset tests for /time endpoint (test improvement)
 - 2025-04-24: Added /headers endpoint to README docs table (doc improvement)
 - 2026-04-26: Improved /time endpoint with better error handling for offset parameter (feature/test)
+- 2025-04-27: Added uptime_seconds to /metrics endpoint (feature/test)
