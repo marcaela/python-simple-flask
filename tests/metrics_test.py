@@ -12,6 +12,7 @@ def test_metrics_endpoint():
     assert 'requests_by_endpoint' in data
     assert 'avg_response_time_ms' in data
     assert 'uptime_since' in data
+    assert 'uptime_seconds' in data
     print("test_metrics_endpoint PASSED")
 
 if __name__ == '__main__':

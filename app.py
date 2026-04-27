@@ -142,13 +142,17 @@ def get_metrics():
     """Return basic request metrics."""
     times = metrics['response_times']
     avg_time = sum(times) / len(times) if times else 0
+    start_time = datetime.fromisoformat(metrics['start_time'])
+    now = datetime.now(timezone.utc)
+    uptime_seconds = round((now - start_time).total_seconds(), 2)
     return jsonify(
         app=APP_NAME,
         total_requests=metrics['requests_total'],
         requests_by_method=metrics['requests_by_method'],
         requests_by_endpoint=metrics['requests_by_endpoint'],
         avg_response_time_ms=round(avg_time, 2),
-        uptime_since=metrics['start_time']
+        uptime_since=metrics['start_time'],
+        uptime_seconds=uptime_seconds
     )
 
 if __name__ == '__main__':
