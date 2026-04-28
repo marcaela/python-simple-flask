@@ -12,3 +12,4 @@
 2026-04-27: Improved test coverage for /time endpoint (test improvement)
 - 2026-04-27: Added uptime_seconds to /health endpoint and update test
 Task completed: Added uptime_seconds to /health endpoint and updated corresponding test.
+- 2026-04-28: refactor: extract time offset logic into utility function for /time endpoint
