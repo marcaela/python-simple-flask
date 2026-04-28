@@ -10,6 +10,12 @@ def get_utc_now_with_offset(offset_hours=0):
     """Return current UTC time with optional offset applied."""
     return datetime.now(timezone.utc) + timedelta(hours=offset_hours)
 
+def get_uptime_seconds():
+    """Return uptime in seconds since app start."""
+    start_time = datetime.fromisoformat(metrics['start_time'])
+    now = datetime.now(timezone.utc)
+    return round((now - start_time).total_seconds(), 2)
+
 # Simple in-memory rate limiter
 rate_limit_store = {}
 
@@ -87,15 +93,12 @@ def version():
 
 @app.route('/health')
 def health():
-    start_time = datetime.fromisoformat(metrics['start_time'])
-    now = datetime.now(timezone.utc)
-    uptime_seconds = round((now - start_time).total_seconds(), 2)
     return jsonify(
         app=APP_NAME,
         status='ok',
         version=VERSION,
         timestamp=datetime.now(timezone.utc).isoformat(),
-        uptime_seconds=uptime_seconds
+        uptime_seconds=get_uptime_seconds()
     )
 
 @app.route('/status')
@@ -154,9 +157,6 @@ def get_metrics():
     """Return basic request metrics."""
     times = metrics['response_times']
     avg_time = sum(times) / len(times) if times else 0
-    start_time = datetime.fromisoformat(metrics['start_time'])
-    now = datetime.now(timezone.utc)
-    uptime_seconds = round((now - start_time).total_seconds(), 2)
     return jsonify(
         app=APP_NAME,
         total_requests=metrics['requests_total'],
@@ -164,7 +164,7 @@ def get_metrics():
         requests_by_endpoint=metrics['requests_by_endpoint'],
         avg_response_time_ms=round(avg_time, 2),
         uptime_since=metrics['start_time'],
-        uptime_seconds=uptime_seconds
+        uptime_seconds=get_uptime_seconds()
     )
 
 if __name__ == '__main__':
