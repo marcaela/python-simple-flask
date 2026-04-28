@@ -6,6 +6,10 @@ from config import APP_NAME, VERSION
 import uuid
 from functools import wraps
 
+def get_utc_now_with_offset(offset_hours=0):
+    """Return current UTC time with optional offset applied."""
+    return datetime.now(timezone.utc) + timedelta(hours=offset_hours)
+
 # Simple in-memory rate limiter
 rate_limit_store = {}
 
@@ -137,10 +141,9 @@ def get_time():
             offset = int(offset_str)
         except ValueError:
             return jsonify(error="Invalid offset parameter"), 400
-        td = timedelta(hours=offset)
-        now = datetime.now(timezone.utc) + td
+        now = get_utc_now_with_offset(offset)
     else:
-        now = datetime.now(timezone.utc)
+        now = get_utc_now_with_offset()
     return jsonify(
         timezone=tz_name,
         timestamp=now.isoformat()
