@@ -16,6 +16,18 @@ def get_uptime_seconds():
     now = datetime.now(timezone.utc)
     return round((now - start_time).total_seconds(), 2)
 
+def get_percentile(sorted_list, percentile):
+    """Given a sorted list, return the percentile value."""
+    if not sorted_list:
+        return 0
+    index = (percentile / 100) * (len(sorted_list) - 1)
+    low = int(index)
+    high = low + 1
+    weight = index - low
+    if high >= len(sorted_list):
+        return sorted_list[low]
+    return sorted_list[low] * (1 - weight) + sorted_list[high] * weight
+
 # Simple in-memory rate limiter
 rate_limit_store = {}
 
@@ -156,13 +168,20 @@ def get_time():
 def get_metrics():
     """Return basic request metrics."""
     times = metrics['response_times']
+    sorted_times = sorted(times)
     avg_time = sum(times) / len(times) if times else 0
+    p50 = get_percentile(sorted_times, 50)
+    p95 = get_percentile(sorted_times, 95)
+    p99 = get_percentile(sorted_times, 99)
     return jsonify(
         app=APP_NAME,
         total_requests=metrics['requests_total'],
         requests_by_method=metrics['requests_by_method'],
         requests_by_endpoint=metrics['requests_by_endpoint'],
         avg_response_time_ms=round(avg_time, 2),
+        p50_response_time_ms=round(p50, 2),
+        p95_response_time_ms=round(p95, 2),
+        p99_response_time_ms=round(p99, 2),
         uptime_since=metrics['start_time'],
         uptime_seconds=get_uptime_seconds()
     )

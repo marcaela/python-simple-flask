@@ -11,6 +11,9 @@ def test_metrics_endpoint():
     assert 'requests_by_method' in data
     assert 'requests_by_endpoint' in data
     assert 'avg_response_time_ms' in data
+    assert 'p50_response_time_ms' in data
+    assert 'p95_response_time_ms' in data
+    assert 'p99_response_time_ms' in data
     assert 'uptime_since' in data
     assert 'uptime_seconds' in data
     print("test_metrics_endpoint PASSED")
