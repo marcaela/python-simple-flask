@@ -14,3 +14,4 @@
 Task completed: Added uptime_seconds to /health endpoint and updated corresponding test.
 - 2026-04-28: refactor: extract time offset logic into utility function for /time endpoint
 - 2026-04-28: refactor: extract uptime calculation into get_uptime_seconds() utility function
+- 2026-04-29: feat: add percentile response times (p50, p95, p99) to /metrics endpoint
