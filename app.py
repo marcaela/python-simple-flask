@@ -184,6 +184,7 @@ def get_metrics():
         p50_response_time_ms=round(p50, 2),
         p95_response_time_ms=round(p95, 2),
         p99_response_time_ms=round(p99, 2),
+        response_time_sample_size=len(times),
         uptime_since=metrics['start_time'],
         uptime_seconds=get_uptime_seconds()
     )
