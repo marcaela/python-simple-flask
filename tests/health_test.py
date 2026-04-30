@@ -1,5 +1,5 @@
 import pytest
-from app import app
+from app import app, rate_limit_store
 
 def test_health_endpoint():
     client = app.test_client()
@@ -38,6 +38,7 @@ def test_version_endpoint():
 
 
 def test_echo_endpoint():
+    rate_limit_store.clear()
     client = app.test_client()
     response = client.post('/echo', json={'message': 'hello'})
     assert response.status_code == 200
@@ -46,6 +47,7 @@ def test_echo_endpoint():
 
 
 def test_echo_empty():
+    rate_limit_store.clear()
     client = app.test_client()
     response = client.post('/echo', content_type='application/json')
     # Without body, returns empty dict (or 400 depending on Flask version)

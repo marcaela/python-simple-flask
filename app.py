@@ -179,6 +179,8 @@ def get_metrics():
         requests_by_method=metrics['requests_by_method'],
         requests_by_endpoint=metrics['requests_by_endpoint'],
         avg_response_time_ms=round(avg_time, 2),
+        min_response_time_ms=round(min(times), 2) if times else 0,
+        max_response_time_ms=round(max(times), 2) if times else 0,
         p50_response_time_ms=round(p50, 2),
         p95_response_time_ms=round(p95, 2),
         p99_response_time_ms=round(p99, 2),
