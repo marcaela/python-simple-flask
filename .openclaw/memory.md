@@ -15,3 +15,4 @@ Task completed: Added uptime_seconds to /health endpoint and updated correspondi
 - 2026-04-28: refactor: extract uptime calculation into get_uptime_seconds() utility function
 - 2026-04-29: feat: add percentile response times (p50, p95, p99) to /metrics endpoint
 - 2026-04-29: test: add rate limit test for /echo endpoint
+- 2026-04-30: feat: add min and max response times to metrics endpoint; fix tests
