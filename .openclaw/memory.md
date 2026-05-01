@@ -1,4 +1,5 @@
 # Memory
+- 2025-05-02: test: add assertions for min_response_time_ms and max_response_time_ms in metrics endpoint
 - 2025-04-17: Added test for /status endpoint (test coverage)
 - 2025-04-17: Improved README with endpoint table (docs improvement)
 - 2025-04-20: Added /headers endpoint for debugging (feature)
