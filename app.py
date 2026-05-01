@@ -109,7 +109,7 @@ def health():
         app=APP_NAME,
         status='ok',
         version=VERSION,
-        timestamp=datetime.now(timezone.utc).isoformat(),
+        timestamp=get_utc_now_with_offset().isoformat(),
         uptime_seconds=get_uptime_seconds()
     )
 
