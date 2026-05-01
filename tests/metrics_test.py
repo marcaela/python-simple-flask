@@ -11,6 +11,8 @@ def test_metrics_endpoint():
     assert 'requests_by_method' in data
     assert 'requests_by_endpoint' in data
     assert 'avg_response_time_ms' in data
+    assert 'min_response_time_ms' in data
+    assert 'max_response_time_ms' in data
     assert 'p50_response_time_ms' in data
     assert 'p95_response_time_ms' in data
     assert 'p99_response_time_ms' in data
