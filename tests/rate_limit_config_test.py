@@ -2,48 +2,43 @@ import sys
 sys.path.insert(0, '.')
 
 import os
-import pytest
-from flask import jsonify
-from app import app, rate_limit_store
+from flask import Flask, jsonify
+from app import rate_limit, rate_limit_store
+import time
 
 def test_custom_rate_limit_via_env():
-    """Test that RATE_LIMIT_MAX and RATE_LIMIT_WINDOW env vars are respected."""
-    # Note: This test works because rate_limit_store and RATE_LIMIT_MAX/WINDOW
-    # are evaluated at import time. For true isolation, each test should reload
-    # the module, but this test verifies the config variables are used.
-    from app import RATE_LIMIT_MAX, RATE_LIMIT_WINDOW
+    """Test that rate_limit decorator respects provided max_requests and window."""
+    # Create a fresh test app to avoid interfering with other tests
+    test_app = Flask(__name__)
+    test_store = {}
     
-    # Set custom values
-    os.environ['RATE_LIMIT_MAX'] = '2'
-    os.environ['RATE_LIMIT_WINDOW'] = '60'
+    # Custom rate limit parameters
+    custom_max = 2
+    custom_window = 60
     
-    # Re-import to pick up env changes (in real scenario would need module reload)
-    # For this test, we'll manually create a decorator with custom values
-    from app import rate_limit
+    # Create a decorator instance with custom values
+    limiter = rate_limit(max_requests=custom_max, window_seconds=custom_window)
     
-    rate_limit_store.clear()
-    client = app.test_client()
-    
-    # Apply decorator with custom max (override env via decorator arg)
-    @app.route('/test-custom-limit', methods=['POST'])
-    @rate_limit(max_requests=2, window_seconds=60)
-    def test_custom_limit():
+    @test_app.route('/test-limit', methods=['POST'])
+    @limiter
+    def test_endpoint():
         return jsonify(success=True), 200
     
-    # Make 2 requests (should be allowed)
-    for i in range(2):
-        response = client.post('/test-custom-limit', json={"test": i})
-        assert response.status_code == 200, f"Request {i} failed"
+    client = test_app.test_client()
     
-    # 3rd request should be rate limited
-    response = client.post('/test-custom-limit', json={"test": "blocked"})
+    # Make allowed number of requests
+    for i in range(custom_max):
+        response = client.post('/test-limit', json={"test": i})
+        assert response.status_code == 200, f"Request {i} should be allowed"
+    
+    # Next request should be rate limited
+    response = client.post('/test-limit', json={"test": "extra"})
     assert response.status_code == 429
-    assert response.get_json()["error"] == "Rate limit exceeded"
+    data = response.get_json()
+    assert data is not None
+    assert data.get("error") == "Rate limit exceeded"
     
-    # Cleanup
-    rate_limit_store.clear()
-    # Note: In practice, you'd remove the test route or use a separate Flask app
+    print("test_custom_rate_limit_via_env PASSED")
 
 if __name__ == '__main__':
     test_custom_rate_limit_via_env()
-    print("test_custom_rate_limit_via_env PASSED")
