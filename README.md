@@ -15,6 +15,7 @@ python app.py
 |------------|--------|---------------------------------|
 | `/`        | GET    | Returns "Hello, World!"        |
 | `/health`  | GET    | Returns status, version, timestamp |
+| `/ready`  | GET    | Returns readiness status |
 | `/version` | GET    | Returns API version             |
 | `/status`  | GET    | Returns request details         |
 | `/echo`    | POST   | Echoes back JSON payload        |

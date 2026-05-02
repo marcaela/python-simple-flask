@@ -140,6 +140,16 @@ def headers():
     """Return request headers (useful for debugging)."""
     return jsonify(dict(request.headers))
 
+@app.route('/ready')
+def ready():
+    """Kubernetes readiness probe endpoint."""
+    return jsonify(
+        app=APP_NAME,
+        status='ready',
+        version=VERSION,
+        timestamp=get_utc_now_with_offset().isoformat()
+    )
+
 @app.route('/ping')
 def ping():
     return "Pong!", 200
