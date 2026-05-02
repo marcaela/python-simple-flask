@@ -1,4 +1,5 @@
 # Memory
+- 2026-05-02: feat: add /ready endpoint for Kubernetes readiness probes; updated README and added test
 - 2025-05-02: test: add assertions for min_response_time_ms and max_response_time_ms in metrics endpoint
 - 2025-04-17: Added test for /status endpoint (test coverage)
 - 2025-04-17: Improved README with endpoint table (docs improvement)
