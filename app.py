@@ -1,5 +1,6 @@
 import logging
 import time
+import os
 from flask import Flask, jsonify, request
 from datetime import datetime, timezone, timedelta
 from config import APP_NAME, VERSION
@@ -31,8 +32,16 @@ def get_percentile(sorted_list, percentile):
 # Simple in-memory rate limiter
 rate_limit_store = {}
 
-def rate_limit(max_requests=10, window_seconds=60):
-    """Simple rate limiting decorator."""
+# Configurable rate limit via environment variables (with sensible defaults)
+RATE_LIMIT_MAX = int(os.getenv('RATE_LIMIT_MAX', '10'))
+RATE_LIMIT_WINDOW = int(os.getenv('RATE_LIMIT_WINDOW', '60'))
+
+def rate_limit(max_requests=None, window_seconds=None):
+    """Simple rate limiting decorator with configurable defaults."""
+    # Use provided args or fall back to environment config
+    max_requests = max_requests if max_requests is not None else RATE_LIMIT_MAX
+    window_seconds = window_seconds if window_seconds is not None else RATE_LIMIT_WINDOW
+    
     def decorator(f):
         @wraps(f)
         def wrapped(*args, **kwargs):
