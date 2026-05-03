@@ -22,7 +22,7 @@ def test_time_endpoint_with_offset_non_utc():
     assert 'timezone' in data
     assert 'timestamp' in data
     assert data['timezone'] == 'TEST'
-    
+
     # Test with negative offset
     response = client.get('/time?tz=TEST&offset=-5')
     assert response.status_code == 200
@@ -40,7 +40,7 @@ def test_time_endpoint_with_offset_utc():
     assert 'timezone' in data
     assert 'timestamp' in data
     assert data['timezone'] == 'UTC'
-    
+
     # Test with negative offset
     response = client.get('/time?tz=UTC&offset=-5')
     assert response.status_code == 200
@@ -48,6 +48,21 @@ def test_time_endpoint_with_offset_utc():
     assert 'timezone' in data
     assert 'timestamp' in data
     assert data['timezone'] == 'UTC'
+
+def test_time_endpoint_with_offset_utc_at_boundary():
+    client = app.test_client()
+    # Test UTC with offset at max boundary
+    response = client.get('/time?tz=UTC&offset=24')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['timezone'] == 'UTC'
+
+    # Test UTC with offset at min boundary
+    response = client.get('/time?tz=UTC&offset=-24')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data['timezone'] == 'UTC'
+
 
 def test_time_endpoint_with_offset_missing():
     client = app.test_client()
@@ -66,3 +81,37 @@ def test_time_endpoint_with_offset_invalid():
     data = response.get_json()
     assert 'error' in data
     assert data['error'] == 'Invalid offset parameter'
+
+def test_time_endpoint_with_offset_boundary_max():
+    client = app.test_client()
+    # Test exactly at max boundary (24)
+    response = client.get('/time?tz=TEST&offset=24')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'timestamp' in data
+
+def test_time_endpoint_with_offset_boundary_min():
+    client = app.test_client()
+    # Test exactly at min boundary (-24)
+    response = client.get('/time?tz=TEST&offset=-24')
+    assert response.status_code == 200
+    data = response.get_json()
+    assert 'timestamp' in data
+
+def test_time_endpoint_with_offset_out_of_range_positive():
+    client = app.test_client()
+    # Test offset beyond max (25)
+    response = client.get('/time?tz=TEST&offset=25')
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'offset must be between -24 and 24 hours'
+
+def test_time_endpoint_with_offset_out_of_range_negative():
+    client = app.test_client()
+    # Test offset beyond min (-25)
+    response = client.get('/time?tz=TEST&offset=-25')
+    assert response.status_code == 400
+    data = response.get_json()
+    assert 'error' in data
+    assert data['error'] == 'offset must be between -24 and 24 hours'

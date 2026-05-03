@@ -175,6 +175,8 @@ def get_time():
             offset = int(offset_str)
         except ValueError:
             return jsonify(error="Invalid offset parameter"), 400
+        if not -24 <= offset <= 24:
+            return jsonify(error="offset must be between -24 and 24 hours"), 400
         now = get_utc_now_with_offset(offset)
     else:
         now = get_utc_now_with_offset()
