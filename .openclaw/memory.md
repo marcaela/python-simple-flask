@@ -1,4 +1,5 @@
 # Memory
+- 2026-05-04: feat: add X-Request-ID header to all responses for request tracing
 - 2026-05-03: feat: enforce offset range [-24,24] for /time endpoint; add validation and boundary tests
 - 2026-05-02: feat: make rate limiting configurable via RATE_LIMIT_MAX and RATE_LIMIT_WINDOW environment variables; added test and updated README
 - 2026-05-02: feat: add /ready endpoint for Kubernetes readiness probes; updated README and added test
