@@ -102,6 +102,7 @@ def log_request(response):
     endpoint = request.path
     metrics['requests_by_endpoint'][endpoint] = metrics['requests_by_endpoint'].get(endpoint, 0) + 1
     logger.info(f"{request.method} {request.path} - {response.status_code} - {request.id} - {duration:.2f}ms")
+    response.headers['X-Request-ID'] = request.id
     return response
 
 @app.route('/')
